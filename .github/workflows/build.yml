@@ -20,12 +20,6 @@ jobs:
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v2
 
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v2
-
-    - name: Restore NuGet packages
-      run: nuget restore ezorsia.sln
-
     - name: Build Release x86
       run: msbuild ezorsia.sln /p:Configuration=Release /p:Platform=x86 /m
 
