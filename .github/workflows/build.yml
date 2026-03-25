@@ -27,13 +27,13 @@ jobs:
       run: nuget restore ezorsia.sln
 
     - name: Build Release x86
-      run: msbuild ezorsia.sln /p:Configuration=Release /p:Platform=Win32 /m
+      run: msbuild ezorsia.sln /p:Configuration=Release /p:Platform=x86 /m
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: ijl15-dll-x86
-        path: Release/ijl15.dll
+        path: out/Release/ijl15.dll
         if-no-files-found: error
 
     - name: Create GitHub Release
@@ -42,5 +42,5 @@ jobs:
       with:
         tag_name: build-${{ github.run_number }}
         name: Build #${{ github.run_number }}
-        files: Release/ijl15.dll
+        files: out/Release/ijl15.dll
         generate_release_notes: true
