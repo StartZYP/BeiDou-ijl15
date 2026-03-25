@@ -1,0 +1,46 @@
+name: Build ijl15.dll (x86)
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2
+
+    - name: Restore NuGet packages
+      run: nuget restore ezorsia.sln
+
+    - name: Build Release x86
+      run: msbuild ezorsia.sln /p:Configuration=Release /p:Platform=Win32 /m
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ijl15-dll-x86
+        path: Release/ijl15.dll
+        if-no-files-found: error
+
+    - name: Create GitHub Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: build-${{ github.run_number }}
+        name: Build #${{ github.run_number }}
+        files: Release/ijl15.dll
+        generate_release_notes: true
