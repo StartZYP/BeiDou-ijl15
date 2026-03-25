@@ -2,9 +2,9 @@ name: Build ijl15.dll (x86)
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, BeiDou ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, BeiDou ]
   workflow_dispatch:
 
 jobs:
@@ -37,7 +37,7 @@ jobs:
         if-no-files-found: error
 
     - name: Create GitHub Release
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/BeiDou')
       uses: softprops/action-gh-release@v2
       with:
         tag_name: build-${{ github.run_number }}
